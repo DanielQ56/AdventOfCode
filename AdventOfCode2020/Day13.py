@@ -14,20 +14,36 @@ def FindWaitTime(earliest, shuttles):
 def FindPattern(shuttles):
 
     shuttles = [int(s) if s != "x" else "x" for s in shuttles ]
+    a = [shuttles[i] - i for i in range(len(shuttles)) if shuttles[i] != "x"]
+    m = [shuttles[i] for i in range(len(shuttles)) if shuttles[i] != "x"]
 
-    offset = [i for i in range(len(shuttles)) if shuttles[i] != "x"]
-    shuttles = [s for s in shuttles if s != "x"]
+    a[0] = 0
 
-    first = shuttles[0]
+    M = 1
+    for n in m:
+        M *= n
+    z = [int(M/m[i]) for i in range(len(m))]
 
-    m = max(shuttles)
-    shift = m + offset[shuttles.index(m)]
-    print(shift)
-    input()
-    while not CheckForCorrectOffset(offset, shuttles, first):
-        first += shuttles[0]
-        #print(first)
-    return first 
+    y = [FindY(z[i], m[i]) for i in range(len(m))]
+
+    print(a)
+    print(z)
+    print(y)
+    print(m)
+
+
+    x = 0
+    for i in range(len(m)):
+        x += (a[i] * y[i] * z[i])
+    
+    return x%M
+
+def FindY(z, m):
+    y = 0
+    while (z*y) % m != 1:
+        y += 1
+    
+    return y
 
 def CheckForCorrectOffset(offset, shuttles, first):
     for i in range(len(shuttles)):
